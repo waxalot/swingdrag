@@ -1,29 +1,24 @@
-# README #
+# swingdrag
 
-This README would normally document whatever steps are necessary to get your application up and running.
+What's swingdrag?\
+swingdrag is a jQuery UI plugin, which adds a nice swing effect to the jQuery UI drag function.
 
-### What is this repository for? ###
+# Version
+v0.5.0
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+# Install
+```
+npm install swingdrag
+```
 
-### How do I get set up? ###
+# Usage
+## HTML
+```html
+<script src="jquery.ui.swingdrag.min.js"></script>
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+<div id="container"></div>
+```
+# JavaScript
+```js
+$("#container").swingdrag();
+```
