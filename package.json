@@ -1,0 +1,34 @@
+{
+  "name": "jquery.ui.swingdrag",
+  "version": "0.5.0",
+  "description": "A nice swing effect for the jQuery UI drag function.",
+  "main": "src/swingDragPlugIn.ts",
+  "keywords": [
+    "jquery",
+    "ui",
+    "swing",
+    "drag"
+  ],
+  "author": "Markus Lansink",
+  "license": "WTFPL",
+  "devDependencies": {
+    "@types/jquery": "^2.0.40",
+    "@types/jqueryui": "^1.11.32",
+    "browser-sync": "^2.17.5",
+    "chai": "^3.5.0",
+    "gulp-mocha": "^4.3.0",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-typescript": "^3.1.6",
+    "mocha": "^3.2.0",
+    "source-map-loader": "^0.2.1",
+    "ts-loader": "^2.0.3",
+    "typemoq": "^1.4.2",
+    "typescript": "^2.2.2",
+    "uglifyjs-webpack-plugin": "^0.4.3",
+    "webpack": "^1.13.1",
+    "webpack-stream": "^3.2.0"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}
