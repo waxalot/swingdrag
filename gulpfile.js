@@ -53,14 +53,14 @@ gulp.task("test", ["build"], function (done) {
 /********************************************
  *  Publish 
  ********************************************/
-gulp.task("publish:vendor", function () {
-    return gulp.src(dirs.vendor + "**/*")
-        .pipe(gulp.dest(dirs.dist + dirs.vendor));
-});
-
 gulp.task("publish:jquery", function () {
     return gulp.src(dirs.nodeModules + "jquery/dist/jquery.min.js")
         .pipe(gulp.dest(dirs.dist + dirs.vendor + "jquery/"));
+});
+
+gulp.task("publish:jquery-ui", function () {
+    return gulp.src(dirs.nodeModules + "jquery-ui-dist/jquery-ui.min.js")
+        .pipe(gulp.dest(dirs.dist + dirs.vendor + "jquery-ui/"));
 });
 
 gulp.task("publish:demoPage", function () {
@@ -68,7 +68,7 @@ gulp.task("publish:demoPage", function () {
         .pipe(gulp.dest(dirs.dist));
 });
 
-gulp.task("publish", ["publish:demoPage", "publish:jquery", "publish:vendor"], function () {
+gulp.task("publish", ["publish:demoPage", "publish:jquery", "publish:jquery-ui"], function () {
     return gulp.src(dirs.src + 'swingDragPlugIn.ts')
         .pipe(webpack(require('./webpack.config.js')))
         .pipe(gulp.dest(dirs.dist));
