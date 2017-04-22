@@ -1,6 +1,8 @@
 /// <reference path="../node_modules/@types/jqueryui/index.d.ts" />
 
 import * as jQuery from 'jquery';
+import { SwingDragOptions } from './swingDragOptions';
+import { Directions } from './directions';
 
 
 /**
@@ -12,117 +14,176 @@ import * as jQuery from 'jquery';
 export class SwingDragPlugIn {
 
     private plugInName: string = 'ui.swingdrag';
-    private plugInObject: any;
+    private options: any;
+    private swingDragOptions: SwingDragOptions;
+    private element: HTMLElement;
 
 
     /**
      * Creates an instance of SwingDragPlugIn.
-     * @param {JQueryStatic} $ 
+     * @param {SwingDragOptions} [swingDragOptions] 
      * 
      * @memberOf SwingDragPlugIn
      */
-    public constructor($: JQueryStatic) {
+    public constructor(swingDragOptions?: SwingDragOptions) {
+        this.swingDragOptions = swingDragOptions;
 
-        this.plugInObject = {
-
-            _create: function () {
-
-                let self = this;
-                let o = self.options;
-                let el = self.element;
-                let elementRef = $(el);
-
-                // add styles for a smoother animation effect
-                elementRef.css({
-                    "-webkit-transition": "all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)",
-                    "transition": "all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)",
-                });
-
-                // the main implementation logic
-                let direction = 0;
-                let currentDirection = 0;
-                let oldX: number;
-                let diffX;
-                let dragging = false;
-
-                let maxRotation = o.maxRotation;
-                if (!maxRotation || maxRotation <= 0)
-                    maxRotation = 2;
+        if (!this.swingDragOptions) {
+            this.swingDragOptions = new SwingDragOptions();
+        }
+    }
 
 
-                elementRef.draggable({
+    /**
+     * Destroys the plugin instance.
+     * 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    public destroy() {
+        if (!$ || !$.Widget) {
+            return;
+        }
 
-                    start: function (e) {
-                        dragging = true;
-                        elementRef.css({
-                            "box-shadow": "0px 12px 11px #383838"
-                        });
-                    },
+        $.Widget.prototype.destroy.call(this);
 
-                    drag: function (e: JQueryEventObject) {
+        if (!this.element) {
+            return;
+        }
 
-                        diffX = e.clientX - oldX;
-                        if (Math.abs(diffX) < 2)
-                            return;
+        let elementRef = $(this.element);
+        elementRef.draggable('destroy');
 
-                        if (e.clientX < oldX) {
-                            direction = -1;
-                        } else if (e.clientX > oldX) {
-                            direction = 1;
-                        } else {
-                            direction = 0;
-                        }
+        elementRef.removeClass('swingdrag');
+        elementRef.removeClass('swingdrag-shadow');
 
-                        oldX = e.clientX;
-                        if (currentDirection != direction) {
-                            elementRef.css({
-                                "WebkitTransform": 'rotate(' + (maxRotation * direction) + 'deg) scale(1.1)'
-                            });
-
-                            currentDirection = direction;
-                        }
-
-                    },
-
-                    stop: function (e) {
-
-                        elementRef.css({
-                            "WebkitTransform": "rotate(0deg) scale(1)",
-                            "box-shadow": ""
-                        });
-
-                        dragging = false;
-                    }
-                });
-
-            },
+        $(this.element).css({
+            "transform": "",
+        });
+    }
 
 
-            _setOption: function (option: any, value: any) {
-                $.Widget.prototype._setOption.apply(this, arguments);
+    /**
+     * Registers this instance as a jQuery UI plugin.
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    public register(): void {
+        $.widget(this.plugInName, this);
+    }
 
-                switch (option) {
-                    case "maxRotation":
-                        break;
+
+    /**
+     * Creates the plugin.
+     * 
+     * @private
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private _create() {
+
+        let elementRef = $(this.element);
+
+        elementRef.addClass('swingdrag');
+
+        // the main implementation logic
+        let direction: Directions = Directions.undefined;
+        let oldDirection: Directions = Directions.undefined;
+        let oldX: number;
+        let dragging = false;
+
+        if (!this.options.maxRotationAngleDeg || this.options.maxRotationAngleDeg <= 0) {
+            this.options.maxRotationAngleDeg = this.swingDragOptions.maxRotationAngleDeg;
+        }
+
+        if (this.options.showShadow === undefined) {
+            this.options.showShadow = this.swingDragOptions.showShadow;
+        }
+
+        if (!this.options.pickUpScaleFactor) {
+            this.options.pickUpScaleFactor = this.swingDragOptions.pickUpScaleFactor;
+        }
+
+        elementRef.draggable({
+
+            start: (e: JQueryEventObject) => {
+                dragging = true;
+
+                if (this.swingDragOptions.showShadow) {
+                    elementRef.addClass('swingdrag-shadow');
                 }
             },
 
+            drag: (e: JQueryEventObject) => {
+                direction = this.getDirection(e.clientX, oldX);
+                oldX = e.clientX;
 
-            destroy: function () {
-                $.Widget.prototype.destroy.call(this);
+                if (oldDirection != direction) {
+                    elementRef.css({
+                        "transform": 'rotate(' + (this.swingDragOptions.maxRotationAngleDeg * direction) + 'deg) scale(' + this.swingDragOptions.pickUpScaleFactor + ')'
+                    });
+                    oldDirection = direction;
+                }
+            },
 
-                $(this.element).draggable("destroy");
-                $(this.element).css({
-                    "-webkit-transition": "",
-                    "transition": "",
-                    "WebkitTransform": "",
-                    "box-shadow": ""
+            stop: (e: JQueryEventObject) => {
+                elementRef.removeClass('swingdrag-shadow');
+                elementRef.css({
+                    "transform": "rotate(0deg) scale(1)"
                 });
+                oldDirection = Directions.undefined;
+                dragging = false;
             }
+        });
 
-        };
+    }
 
-        $.widget(this.plugInName, this.plugInObject);
+
+    /**
+     * Calculates the dragging direction.
+     * 
+     * @param {number} actualX 
+     * @param {number} oldX 
+     * @returns {Directions} 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    public getDirection(actualX: number, oldX: number): Directions {
+
+        let diffX = actualX - oldX;
+        if (actualX < oldX) {
+            return Directions.left;
+        } else if (actualX > oldX) {
+            return Directions.right;
+        } else {
+            return Directions.undefined;
+        }
+    }
+
+
+    /**
+     * Sets an option.
+     * 
+     * @private
+     * @param {*} option 
+     * @param {*} value 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private _setOption(option: any, value: any) {
+        $.Widget.prototype._setOption.apply(this, arguments);
+
+        switch (option) {
+            case "maxRotationAngleDeg":
+                this.swingDragOptions.maxRotationAngleDeg = value;
+                break;
+            case "showShadow":
+                this.swingDragOptions.showShadow = value;
+                break;
+            case "pickUpScaleFactor":
+                this.swingDragOptions.pickUpScaleFactor = value;
+                break;
+        }
     }
 
 }

@@ -10,11 +10,8 @@ var dirs = {
     build: 'build/',
     dist: "dist/",
     vendor: "vendor/",
-    nodeModules: "node_modules/"
-};
-
-var files = {
-    tests: [dirs.src + '**/*.spec.ts']
+    nodeModules: "node_modules/",
+    tests: "tests/"
 };
 
 
@@ -34,15 +31,31 @@ gulp.task("build", function () {
             "removeComments": true
         }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest("./src"));
+        .pipe(gulp.dest(dirs.build + dirs.src));
 });
 
 
 /********************************************
  *  Testing 
  ********************************************/
-gulp.task("test", ["build"], function (done) {
-    return gulp.src(files.tests)
+gulp.task("build:tests", ["build"], function () {
+    return gulp.src([dirs.tests + "**/*.spec.ts"])
+        .pipe(sourcemaps.init())
+        .pipe(ts({
+            "target": "es5",
+            "module": "commonjs",
+            "sourceMap": true,
+            "noImplicitAny": true,
+            "preserveConstEnums": true,
+            "moduleResolution": "node",
+            "removeComments": true
+        }))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(dirs.build + dirs.tests));
+});
+
+gulp.task("test", ["build:tests"], function (done) {
+    return gulp.src(dirs.build + dirs.tests + "**/*.spec.js")
         .pipe(mocha().on('error', function (error) {
             console.log(error);
             done();
@@ -83,7 +96,7 @@ gulp.task("serve", ["publish"], function () {
             baseDir: "./dist",
             index: "index.html"
         },
-        browser: "chrome",
+        browser: "firefox",
         files: [
             "dist/**/*",
             "index.html"

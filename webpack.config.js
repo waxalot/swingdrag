@@ -7,7 +7,7 @@ module.exports = {
 		filename: 'jquery.ui.swingdrag.min.js'
 	},
 	resolve: {
-		extensions: ['.ts', '.js', '']
+		extensions: ['.ts', '.js', '', 'css', 'scss']
 	},
 	module: {
 		loaders: [
@@ -15,6 +15,14 @@ module.exports = {
 				test: /\.ts?$/,
 				loader: 'ts-loader',
 				exclude: /node_modules/
+			},
+			{
+				test: /\.css$/,
+				loader: "style!css"
+			},
+			{
+				test: /\.scss$/,
+				loaders: ["style-loader", "css-loader", "sass-loader"]
 			}
 		]
 	},

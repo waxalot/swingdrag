@@ -1,0 +1,11 @@
+//colors
+$color_tuatara_approx: #383838;
+
+.swingdrag {
+	transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+	box-shadow: none;
+}
+.swingdrag-shadow {
+	//Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+	box-shadow: 0 12px 11px $color_tuatara_approx;
+}
