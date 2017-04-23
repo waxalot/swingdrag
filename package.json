@@ -1,8 +1,8 @@
 {
   "name": "swingdrag",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "A nice swing effect for the jQuery UI drag function.",
-  "main": "src/swingDragPlugIn.ts",
+  "main": "src/index.ts",
   "keywords": [
     "jquery",
     "ui",
