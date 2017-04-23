@@ -11,7 +11,10 @@ var dirs = {
     dist: "dist/",
     vendor: "vendor/",
     nodeModules: "node_modules/",
-    tests: "tests/"
+    tests: "tests/",
+    config: "config/",
+    release: "release/",
+    debug: "debug/"
 };
 
 
@@ -83,7 +86,13 @@ gulp.task("publish:demoPage", function () {
 
 gulp.task("publish", ["publish:demoPage", "publish:jquery", "publish:jquery-ui"], function () {
     return gulp.src(dirs.src + 'swingDragPlugIn.ts')
-        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(webpack(require('./' + dirs.config + dirs.release + 'webpack.config.js')))
+        .pipe(gulp.dest(dirs.dist));
+});
+
+gulp.task("publish:debug", function () {
+    return gulp.src(dirs.src + 'swingDragPlugIn.ts')
+        .pipe(webpack(require('./' + dirs.config + dirs.debug + 'webpack.config.js')))
         .pipe(gulp.dest(dirs.dist));
 });
 
