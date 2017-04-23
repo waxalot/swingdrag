@@ -84,6 +84,8 @@ export class SwingDragPlugIn {
 
         let elementRef = $(this.element);
 
+        this.initOptions();
+
         elementRef.addClass('swingdrag');
 
         // the main implementation logic
@@ -91,18 +93,6 @@ export class SwingDragPlugIn {
         let oldDirection: Directions = Directions.undefined;
         let oldX: number;
         let dragging = false;
-
-        if (!this.options.maxRotationAngleDeg || this.options.maxRotationAngleDeg <= 0) {
-            this.options.maxRotationAngleDeg = this.swingDragOptions.maxRotationAngleDeg;
-        }
-
-        if (this.options.showShadow === undefined) {
-            this.options.showShadow = this.swingDragOptions.showShadow;
-        }
-
-        if (!this.options.pickUpScaleFactor) {
-            this.options.pickUpScaleFactor = this.swingDragOptions.pickUpScaleFactor;
-        }
 
         elementRef.draggable({
 
@@ -157,6 +147,31 @@ export class SwingDragPlugIn {
             return Directions.right;
         } else {
             return Directions.undefined;
+        }
+    }
+
+
+    /**
+     * Creates the swingdrag options instance 
+     * and synchronizes the jQuery UI options with the swingdrag options values.
+     * 
+     * @private
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private initOptions() {
+        this.swingDragOptions = new SwingDragOptions();
+
+        if (this.options.maxRotationAngleDeg || this.options.maxRotationAngleDeg === 0) {
+            this.swingDragOptions.maxRotationAngleDeg = this.options.maxRotationAngleDeg;
+        }
+
+        if (this.options.showShadow !== undefined) {
+            this.swingDragOptions.showShadow = this.options.showShadow;
+        }
+
+        if (this.options.pickUpScaleFactor || this.options.pickUpScaleFactor === 0) {
+            this.swingDragOptions.pickUpScaleFactor = this.options.pickUpScaleFactor;
         }
     }
 

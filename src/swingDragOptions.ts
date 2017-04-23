@@ -16,7 +16,7 @@ export class SwingDragOptions {
 
 
     /**
-     * Indicates whether a pickup-/drop-shadow should be shown.
+     * Indicates whether a pickup-/drop shadow should be shown.
      * Default: true
      * @type {boolean}
      * @memberOf SwingDragOptions

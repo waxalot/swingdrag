@@ -1,5 +1,4 @@
 node_modules
-src/*.js
-src/*.js.map
+build
 dist/vendor
 dist/index.html
