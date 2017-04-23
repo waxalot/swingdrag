@@ -13,6 +13,9 @@ swingdrag is a jQuery UI plugin, which adds a nice swing effect to the jQuery UI
 * First released version. 
 * There are performance bugs in some browsers.
 
+# Demo
+For a full working demo click [here](http://codepen.io/waxalot/pen/xdOaRW)
+
 # Install
 ```
 npm install swingdrag
