@@ -7,12 +7,12 @@
 export class SwingDragOptions {
 
     /**
-     * The maximum angle of rotation in degree.
+     * The angle of rotation in degree.
      * Default: 3
      * @type {number}
      * @memberOf SwingDragOptions
      */
-    public maxRotationAngleDeg: number;
+    public rotationAngleDeg: number;
 
 
     /**
@@ -39,7 +39,7 @@ export class SwingDragOptions {
      * @memberOf SwingDragOptions
      */
     public constructor() {
-        this.maxRotationAngleDeg = 2;
+        this.rotationAngleDeg = 8;
         this.showShadow = true;
         this.pickUpScaleFactor = 1.1;
     }

@@ -110,7 +110,7 @@ export class SwingDragPlugIn {
 
                 if (oldDirection != direction) {
                     elementRef.css({
-                        "transform": 'rotate(' + (this.swingDragOptions.maxRotationAngleDeg * direction) + 'deg) scale(' + this.swingDragOptions.pickUpScaleFactor + ')'
+                        "transform": 'rotate(' + (this.swingDragOptions.rotationAngleDeg * direction) + 'deg) scale(' + this.swingDragOptions.pickUpScaleFactor + ')'
                     });
                     oldDirection = direction;
                 }
@@ -162,8 +162,8 @@ export class SwingDragPlugIn {
     private initOptions() {
         this.swingDragOptions = new SwingDragOptions();
 
-        if (this.options.maxRotationAngleDeg || this.options.maxRotationAngleDeg === 0) {
-            this.swingDragOptions.maxRotationAngleDeg = this.options.maxRotationAngleDeg;
+        if (this.options.rotationAngleDeg || this.options.rotationAngleDeg === 0) {
+            this.swingDragOptions.rotationAngleDeg = this.options.rotationAngleDeg;
         }
 
         if (this.options.showShadow !== undefined) {
@@ -189,8 +189,8 @@ export class SwingDragPlugIn {
         $.Widget.prototype._setOption.apply(this, arguments);
 
         switch (option) {
-            case "maxRotationAngleDeg":
-                this.swingDragOptions.maxRotationAngleDeg = value;
+            case "rotationAngleDeg":
+                this.swingDragOptions.rotationAngleDeg = value;
                 break;
             case "showShadow":
                 this.swingDragOptions.showShadow = value;
