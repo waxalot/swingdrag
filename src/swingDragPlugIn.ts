@@ -148,7 +148,8 @@ export class SwingDragPlugIn {
         let oldDirection: Directions = Directions.undefined;
         let oldX: number;
         let dragging = false;
-
+        let calculatedAngle: number;
+        
         elementRef.draggable({
 
             start: (e: JQueryEventObject) => {
@@ -157,18 +158,27 @@ export class SwingDragPlugIn {
                 if (this.swingDragOptions.showShadow) {
                     this.enableSwingDragShadow(elementRef);
                 }
+
+                calculatedAngle = Math.abs(this.swingDragOptions.rotationAngleDeg);
             },
 
-            drag: (e: JQueryEventObject) => {
+            drag: (e: JQueryEventObject, ui: any) => {
+
                 direction = this.getDirection(e.clientX, oldX);
+               
+                if (direction === Directions.left && calculatedAngle > 0) {
+                    calculatedAngle = calculatedAngle * -1;
+                } else if (direction === Directions.right && calculatedAngle < 0) {
+                    calculatedAngle = calculatedAngle * -1;
+                }
+
+                elementRef.css({
+                    "transform": 'rotate(' + (calculatedAngle) + 'deg) scale(' + this.swingDragOptions.pickUpScaleFactor + ')'
+                });
+
+                oldDirection = direction;
                 oldX = e.clientX;
 
-                if (oldDirection != direction) {
-                    elementRef.css({
-                        "transform": 'rotate(' + (this.swingDragOptions.rotationAngleDeg * direction) + 'deg) scale(' + this.swingDragOptions.pickUpScaleFactor + ')'
-                    });
-                    oldDirection = direction;
-                }
             },
 
             stop: (e: JQueryEventObject) => {
