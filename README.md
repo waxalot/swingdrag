@@ -4,6 +4,11 @@ What's swingdrag?\
 swingdrag is a jQuery UI plugin, which adds a nice swing effect to the jQuery UI drag function.
 
 # What`s new?
+
+## v1.1.0
+* The options `maxRotationAngleDeg` was renamed to `rotationAngleDeg` and its default value was set to 8.
+* The size of the deployed `jquery.ui.swingdrag.min.js` file was reduced.
+
 ## v1.0.0
 * Display/performance bugs were fixed.
 * swingdrag now works smooth in all popular browsers like Chrome, Firefox, Internet Explorer, Edge, etc...
@@ -38,7 +43,7 @@ $("#container").swingdrag();
 ## rotationAngleDeg
 ```
 The rotation angle in degrees.
-Default : 3
+Default : 8
 ```
 
 ## showShadow
@@ -56,9 +61,9 @@ Default: 1.1
 ### Example
 ```js
 let options = {
-    rotationAngleDeg: 5, 
-    showShadow: false, 
-    pickUpScaleFactor: 1.5
+    rotationAngleDeg: 8, 
+    showShadow: true, 
+    pickUpScaleFactor: 1.1
 }
 
 $("#container").swingdrag(options);

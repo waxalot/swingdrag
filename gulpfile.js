@@ -85,7 +85,7 @@ gulp.task("publish:demoPage", function () {
 });
 
 gulp.task("publish", ["publish:demoPage", "publish:jquery", "publish:jquery-ui"], function () {
-    return gulp.src(dirs.src + 'swingDragPlugIn.ts')
+    return gulp.src(dirs.src + 'index.ts')
         .pipe(webpack(require('./' + dirs.config + dirs.release + 'webpack.config.js')))
         .pipe(gulp.dest(dirs.dist));
 });
@@ -105,7 +105,7 @@ gulp.task("serve", ["publish"], function () {
             baseDir: "./dist",
             index: "index.html"
         },
-        browser: "firefox",
+        browser: "chrome",
         files: [
             "dist/**/*",
             "index.html"

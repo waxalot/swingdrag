@@ -3,6 +3,7 @@
 import * as jQuery from 'jquery';
 import { SwingDragOptions } from './swingDragOptions';
 import { Directions } from './directions';
+import { CSSConstants } from './cssConstants';
 
 
 /**
@@ -54,8 +55,8 @@ export class SwingDragPlugIn {
         let elementRef = $(this.element);
         elementRef.draggable('destroy');
 
-        elementRef.removeClass('swingdrag');
-        elementRef.removeClass('swingdrag-shadow');
+        this.disableSwing(elementRef);
+        this.disableSwingDragShadow(elementRef);
 
         $(this.element).css({
             "transform": "",
@@ -74,6 +75,59 @@ export class SwingDragPlugIn {
 
 
     /**
+     * Adds CSS styles, so that the swingdrag effect is visible.
+     * 
+     * @private
+     * @param {JQuery} elementRef 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private enableSwing(elementRef: JQuery) {
+        elementRef.css(CSSConstants.css_swingdrag_transition, CSSConstants.css_swingdrag_transition_value);
+        elementRef.css(CSSConstants.css_swingdrag_boxShadow, CSSConstants.css_swingdrag_boxShadow_value);
+    }
+
+
+    /**
+     * Removes CSS styles, so that the swingdrag effect is not visible.
+     * 
+     * @private
+     * @param {JQuery} elementRef 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private disableSwing(elementRef: JQuery) {
+        elementRef.css(CSSConstants.css_swingdrag_transition, CSSConstants.css_swingdrag_transition_value_clear);
+    }
+
+
+    /**
+     * Adds CSS styles, so that the swingdrag shadow is visible.
+     * 
+     * @private
+     * @param {JQuery} elementRef 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private enableSwingDragShadow(elementRef: JQuery) {
+        elementRef.css(CSSConstants.css_swingdragShadow, CSSConstants.css_swingdragShadow_value);
+    }
+
+
+    /**
+     * Removes CSS styles, so that the swingdrag shadow is not visible.
+     * 
+     * @private
+     * @param {JQuery} elementRef 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private disableSwingDragShadow(elementRef: JQuery) {
+        elementRef.css(CSSConstants.css_swingdragShadow, CSSConstants.css_swingdragShadow_value_clear);
+    }
+
+
+    /**
      * Creates the plugin.
      * 
      * @private
@@ -86,7 +140,8 @@ export class SwingDragPlugIn {
 
         this.initOptions();
 
-        elementRef.addClass('swingdrag');
+        // enable swing effect
+        this.enableSwing(elementRef);
 
         // the main implementation logic
         let direction: Directions = Directions.undefined;
@@ -100,7 +155,7 @@ export class SwingDragPlugIn {
                 dragging = true;
 
                 if (this.swingDragOptions.showShadow) {
-                    elementRef.addClass('swingdrag-shadow');
+                    this.enableSwingDragShadow(elementRef);
                 }
             },
 
@@ -117,7 +172,7 @@ export class SwingDragPlugIn {
             },
 
             stop: (e: JQueryEventObject) => {
-                elementRef.removeClass('swingdrag-shadow');
+                this.disableSwingDragShadow(elementRef);
                 elementRef.css({
                     "transform": "rotate(0deg) scale(1)"
                 });

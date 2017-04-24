@@ -1,6 +1,6 @@
 {
   "name": "swingdrag",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A nice swing effect for the jQuery UI drag function.",
   "main": "src/index.ts",
   "keywords": [
@@ -11,6 +11,10 @@
   ],
   "author": "Markus Lansink",
   "license": "WTFPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/waxalot/swingdrag.git"
+  },
   "devDependencies": {
     "@types/chai": "^3.5.1",
     "@types/jquery": "^2.0.40",
@@ -19,15 +23,11 @@
     "@types/node": "^7.0.13",
     "browser-sync": "^2.17.5",
     "chai": "^3.5.0",
-    "css-loader": "^0.28.0",
     "gulp-mocha": "^4.3.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-typescript": "^3.1.6",
     "mocha": "^3.2.0",
-    "node-sass": "^4.5.2",
-    "sass-loader": "^6.0.3",
     "source-map-loader": "^0.2.1",
-    "style-loader": "^0.16.1",
     "ts-loader": "^2.0.3",
     "typemoq": "^1.4.2",
     "typescript": "^2.2.2",
