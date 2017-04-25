@@ -128,6 +128,23 @@ export class SwingDragPlugIn {
 
 
     /**
+     * Updates CSS styles.
+     * 
+     * @private
+     * @param {JQuery} elementRef 
+     * @param {number} rotationAngleDeg 
+     * @param {number} scaleFactor 
+     * 
+     * @memberOf SwingDragPlugIn
+     */
+    private updateElementTransform(elementRef: JQuery, rotationAngleDeg: number, scaleFactor: number) {
+        elementRef.css({
+            "transform": 'rotate(' + (rotationAngleDeg) + 'deg) scale(' + scaleFactor + ')'
+        });
+    }
+
+
+    /**
      * Creates the plugin.
      * 
      * @private
@@ -146,10 +163,11 @@ export class SwingDragPlugIn {
         // the main implementation logic
         let direction: Directions = Directions.undefined;
         let oldDirection: Directions = Directions.undefined;
-        let oldX: number;
         let dragging = false;
         let calculatedAngle: number;
-        
+        let oldXPos: number;
+        let oldYPos: number;
+
         elementRef.draggable({
 
             start: (e: JQueryEventObject) => {
@@ -164,28 +182,36 @@ export class SwingDragPlugIn {
 
             drag: (e: JQueryEventObject, ui: any) => {
 
-                direction = this.getDirection(e.clientX, oldX);
-               
+                direction = this.getDirection(ui.position.left, oldXPos);
+
                 if (direction === Directions.left && calculatedAngle > 0) {
                     calculatedAngle = calculatedAngle * -1;
                 } else if (direction === Directions.right && calculatedAngle < 0) {
                     calculatedAngle = calculatedAngle * -1;
                 }
 
-                elementRef.css({
-                    "transform": 'rotate(' + (calculatedAngle) + 'deg) scale(' + this.swingDragOptions.pickUpScaleFactor + ')'
-                });
+                this.updateElementTransform(elementRef, calculatedAngle, this.swingDragOptions.pickUpScaleFactor);
 
                 oldDirection = direction;
-                oldX = e.clientX;
+                oldXPos = ui.position.left;
+                oldYPos = ui.position.top;
 
+                // Check if the element is not being dragged anymore 
+                // and could therefore being set to back to zero rotation.
+                setTimeout(() => {
+                    if (oldXPos === ui.position.left && oldYPos === ui.position.top) {
+                        let tempScaleFactor = 1;
+                        if (dragging) {
+                            tempScaleFactor = this.swingDragOptions.pickUpScaleFactor;
+                        }
+                        this.updateElementTransform(elementRef, 0, tempScaleFactor);
+                    }
+                }, 100);
             },
 
             stop: (e: JQueryEventObject) => {
                 this.disableSwingDragShadow(elementRef);
-                elementRef.css({
-                    "transform": "rotate(0deg) scale(1)"
-                });
+                this.updateElementTransform(elementRef, 0, 1);
                 oldDirection = Directions.undefined;
                 dragging = false;
             }
