@@ -1,6 +1,6 @@
 {
   "name": "swingdrag",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A nice swing effect for the jQuery UI drag function.",
   "main": "src/index.ts",
   "keywords": [
@@ -24,6 +24,7 @@
     "browser-sync": "^2.17.5",
     "chai": "^3.5.0",
     "gulp-mocha": "^4.3.0",
+    "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-typescript": "^3.1.6",
     "mocha": "^3.2.0",

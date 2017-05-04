@@ -8,6 +8,10 @@ For a full working demo click [here](http://codepen.io/waxalot/pen/xdOaRW)
 
 ## What`s new?
 
+### v1.2.0
+* All used styles have been moved from code into a `css/swingdrag.css` file.
+* The source file swingdrag.scss have been added, too.
+
 ### v1.1.0
 * The options `maxRotationAngleDeg` was renamed to `rotationAngleDeg` and its default value was set to 8.
 * The size of the deployed `jquery.ui.swingdrag.min.js` file was reduced.
@@ -29,7 +33,8 @@ npm install swingdrag
 ## Usage
 ### HTML
 ```html
-<script src="node_modules/swingdrag/dist/jquery.ui.swingdrag.min.js"></script>
+<script src="node_modules/swingdrag/dist/src/jquery.ui.swingdrag.min.js"></script>
+<link rel="stylesheet" href="node_modules/swingdrag/dist/css/swingdrag.css" />
 
 <div id="container">The container element which should be dragged</div>
 ```

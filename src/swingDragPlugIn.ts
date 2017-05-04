@@ -3,7 +3,6 @@
 import * as jQuery from 'jquery';
 import { SwingDragOptions } from './swingDragOptions';
 import { Directions } from './directions';
-import { CSSConstants } from './cssConstants';
 
 
 /**
@@ -83,8 +82,7 @@ export class SwingDragPlugIn {
      * @memberOf SwingDragPlugIn
      */
     private enableSwing(elementRef: JQuery) {
-        elementRef.css(CSSConstants.css_swingdrag_transition, CSSConstants.css_swingdrag_transition_value);
-        elementRef.css(CSSConstants.css_swingdrag_boxShadow, CSSConstants.css_swingdrag_boxShadow_value);
+        elementRef.addClass('swingdrag');
     }
 
 
@@ -97,7 +95,7 @@ export class SwingDragPlugIn {
      * @memberOf SwingDragPlugIn
      */
     private disableSwing(elementRef: JQuery) {
-        elementRef.css(CSSConstants.css_swingdrag_transition, CSSConstants.css_swingdrag_transition_value_clear);
+        elementRef.removeClass('swingdrag');
     }
 
 
@@ -110,7 +108,7 @@ export class SwingDragPlugIn {
      * @memberOf SwingDragPlugIn
      */
     private enableSwingDragShadow(elementRef: JQuery) {
-        elementRef.css(CSSConstants.css_swingdragShadow, CSSConstants.css_swingdragShadow_value);
+        elementRef.addClass('shadow');
     }
 
 
@@ -123,7 +121,7 @@ export class SwingDragPlugIn {
      * @memberOf SwingDragPlugIn
      */
     private disableSwingDragShadow(elementRef: JQuery) {
-        elementRef.css(CSSConstants.css_swingdragShadow, CSSConstants.css_swingdragShadow_value_clear);
+        elementRef.removeClass('shadow');
     }
 
 

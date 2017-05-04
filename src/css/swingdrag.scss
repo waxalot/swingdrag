@@ -1,0 +1,7 @@
+.swingdrag {
+    transition: transform 1.0s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    &.shadow {
+        box-shadow: 0 12px 11px #383838;
+    }
+}

@@ -1,9 +1,12 @@
+'use strict';
+
 var gulp = require('gulp');
 var webpack = require('webpack-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var ts = require('gulp-typescript');
 var browserSync = require('browser-sync').create();
 var mocha = require('gulp-mocha');
+var sass = require('gulp-sass');
 
 var dirs = {
     src: 'src/',
@@ -14,7 +17,8 @@ var dirs = {
     tests: "tests/",
     config: "config/",
     release: "release/",
-    debug: "debug/"
+    debug: "debug/",
+    css: "css/"
 };
 
 
@@ -84,10 +88,16 @@ gulp.task("publish:demoPage", function () {
         .pipe(gulp.dest(dirs.dist));
 });
 
-gulp.task("publish", ["publish:demoPage", "publish:jquery", "publish:jquery-ui"], function () {
+gulp.task("publish:sass", function () {
+    return gulp.src(dirs.src + dirs.css + '**/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest(dirs.dist + dirs.css));
+});
+
+gulp.task("publish", ["publish:demoPage", "publish:sass", "publish:jquery", "publish:jquery-ui"], function () {
     return gulp.src(dirs.src + 'index.ts')
         .pipe(webpack(require('./' + dirs.config + dirs.release + 'webpack.config.js')))
-        .pipe(gulp.dest(dirs.dist));
+        .pipe(gulp.dest(dirs.dist + dirs.src));
 });
 
 gulp.task("publish:debug", function () {
