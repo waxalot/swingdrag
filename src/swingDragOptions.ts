@@ -7,10 +7,11 @@
 export class SwingDragOptions {
 
     /**
-     * The maximum possible angle of rotation in degree.
-     * Default: 3
+     * The maximum possible angle of rotation in degrees.
+     * Default: 20
+     * 
      * @type {number}
-     * @memberOf SwingDragOptions
+     * @memberof SwingDragOptions
      */
     public rotationAngleDeg: number;
 
@@ -18,8 +19,9 @@ export class SwingDragOptions {
     /**
      * Indicates whether a pickup-/drop shadow should be shown.
      * Default: true
+     * 
      * @type {boolean}
-     * @memberOf SwingDragOptions
+     * @memberof SwingDragOptions
      */
     public showShadow: boolean;
 
@@ -27,8 +29,9 @@ export class SwingDragOptions {
     /**
      * The pick up scale factor indicates the size change during dragging.
      * Default: 1.1
+     * 
      * @type {number}
-     * @memberOf SwingDragOptions
+     * @memberof SwingDragOptions
      */
     public pickUpScaleFactor: number;
 
@@ -36,10 +39,10 @@ export class SwingDragOptions {
     /**
      * Creates an instance of SwingDragOptions.
      * 
-     * @memberOf SwingDragOptions
+     * @memberof SwingDragOptions
      */
     public constructor() {
-        this.rotationAngleDeg = 8;
+        this.rotationAngleDeg = 20;
         this.showShadow = true;
         this.pickUpScaleFactor = 1.1;
     }

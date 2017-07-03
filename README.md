@@ -8,6 +8,9 @@ For a full working demo click [here](http://codepen.io/waxalot/pen/xdOaRW)
 
 ## What`s new?
 
+### v.1.3.1
+* The API documentation and the examples were updated.
+
 ### v.1.3.0
 * The swing effect is now depending on drag speed.
 
@@ -50,8 +53,8 @@ $("#container").swingdrag();
 
 ### rotationAngleDeg
 ```
-The rotation angle in degrees.
-Default : 8
+The maximum possible angle of rotation in degrees.
+Default : 20
 ```
 
 ### showShadow
@@ -69,7 +72,7 @@ Default: 1.1
 #### Example
 ```js
 let options = {
-    rotationAngleDeg: 8, 
+    rotationAngleDeg: 20, 
     showShadow: true, 
     pickUpScaleFactor: 1.1
 }

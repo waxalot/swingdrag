@@ -56,8 +56,8 @@
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/// <reference path="../node_modules/@types/jqueryui/index.d.ts" />
 	"use strict";
+	/// <reference path="../node_modules/@types/jqueryui/index.d.ts" />
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var swingDragOptions_1 = __webpack_require__(2);
 	var vector2D_1 = __webpack_require__(3);
@@ -72,7 +72,7 @@
 	     * Creates an instance of SwingDragPlugIn.
 	     * @param {SwingDragOptions} [swingDragOptions]
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    function SwingDragPlugIn(swingDragOptions) {
 	        this.plugInName = 'ui.swingdrag';
@@ -86,7 +86,7 @@
 	     * Destroys the plugin instance.
 	     *
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.destroy = function () {
 	        if (!$ || !$.Widget) {
@@ -107,7 +107,7 @@
 	    /**
 	     * Registers this instance as a jQuery UI plugin.
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.register = function () {
 	        $.widget(this.plugInName, this);
@@ -118,7 +118,7 @@
 	     * @private
 	     * @param {JQuery} elementRef
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.enableSwing = function (elementRef) {
 	        elementRef.addClass('swingdrag');
@@ -129,7 +129,7 @@
 	     * @private
 	     * @param {JQuery} elementRef
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.disableSwing = function (elementRef) {
 	        elementRef.removeClass('swingdrag');
@@ -140,7 +140,7 @@
 	     * @private
 	     * @param {JQuery} elementRef
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.enableSwingDragShadow = function (elementRef) {
 	        elementRef.addClass('shadow');
@@ -151,7 +151,7 @@
 	     * @private
 	     * @param {JQuery} elementRef
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.disableSwingDragShadow = function (elementRef) {
 	        elementRef.removeClass('shadow');
@@ -164,7 +164,7 @@
 	     * @param {number} rotationAngleDeg
 	     * @param {number} scaleFactor
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.updateElementTransform = function (elementRef, rotationAngleDeg, scaleFactor) {
 	        elementRef.css({
@@ -176,7 +176,7 @@
 	     *
 	     * @private
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype._create = function () {
 	        var _this = this;
@@ -242,7 +242,7 @@
 	     *
 	     * @private
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype.initOptions = function () {
 	        this.swingDragOptions = new swingDragOptions_1.SwingDragOptions();
@@ -263,7 +263,7 @@
 	     * @param {*} option
 	     * @param {*} value
 	     *
-	     * @memberOf SwingDragPlugIn
+	     * @memberof SwingDragPlugIn
 	     */
 	    SwingDragPlugIn.prototype._setOption = function (option, value) {
 	        $.Widget.prototype._setOption.apply(this, arguments);
@@ -300,10 +300,10 @@
 	    /**
 	     * Creates an instance of SwingDragOptions.
 	     *
-	     * @memberOf SwingDragOptions
+	     * @memberof SwingDragOptions
 	     */
 	    function SwingDragOptions() {
-	        this.rotationAngleDeg = 8;
+	        this.rotationAngleDeg = 20;
 	        this.showShadow = true;
 	        this.pickUpScaleFactor = 1.1;
 	    }
