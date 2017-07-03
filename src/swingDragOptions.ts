@@ -7,7 +7,7 @@
 export class SwingDragOptions {
 
     /**
-     * The angle of rotation in degree.
+     * The maximum possible angle of rotation in degree.
      * Default: 3
      * @type {number}
      * @memberOf SwingDragOptions

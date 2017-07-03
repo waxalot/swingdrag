@@ -8,6 +8,9 @@ For a full working demo click [here](http://codepen.io/waxalot/pen/xdOaRW)
 
 ## What`s new?
 
+### v.1.3.0
+* The swing effect is now depending on drag speed.
+
 ### v1.2.0
 * All used styles have been moved from code into a `css/swingdrag.css` file.
 * The source file swingdrag.scss have been added, too.

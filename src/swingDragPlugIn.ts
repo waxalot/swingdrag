@@ -2,7 +2,7 @@
 
 import * as jQuery from 'jquery';
 import { SwingDragOptions } from './swingDragOptions';
-import { Directions } from './directions';
+import { Vector2D } from "./vector2D";
 
 
 /**
@@ -18,6 +18,8 @@ export class SwingDragPlugIn {
     private swingDragOptions: SwingDragOptions;
     private element: HTMLElement;
 
+    private readonly updateCurrentDragVectorIntervalMS: number;
+
 
     /**
      * Creates an instance of SwingDragPlugIn.
@@ -31,6 +33,8 @@ export class SwingDragPlugIn {
         if (!this.swingDragOptions) {
             this.swingDragOptions = new SwingDragOptions();
         }
+
+        this.updateCurrentDragVectorIntervalMS = 1000 / 60; // 60fps
     }
 
 
@@ -159,84 +163,77 @@ export class SwingDragPlugIn {
         this.enableSwing(elementRef);
 
         // the main implementation logic
-        let direction: Directions = Directions.undefined;
-        let oldDirection: Directions = Directions.undefined;
+        let dragIntervalId: any;
+
         let dragging = false;
-        let calculatedAngle: number;
-        let oldXPos: number;
-        let oldYPos: number;
+
+        let calculatedAngleDeg: number;
+        let currentDrag = new Vector2D();
+        let oldDrag = new Vector2D();
+        let diffDrag = new Vector2D();
+
+
+        // Used to update the drag effect.
+        // Will be called from a separate interval.
+        let updateCurrentDrag = () => {
+
+            diffDrag.x = currentDrag.x - oldDrag.x;
+            diffDrag.y = currentDrag.y - oldDrag.y;
+
+            let speed = diffDrag.x;
+            calculatedAngleDeg = speed;
+
+            // Limit the rotation angle.
+            if (calculatedAngleDeg > this.swingDragOptions.rotationAngleDeg) {
+                calculatedAngleDeg = this.swingDragOptions.rotationAngleDeg;
+            } else if (calculatedAngleDeg < -this.swingDragOptions.rotationAngleDeg) {
+                calculatedAngleDeg = -this.swingDragOptions.rotationAngleDeg;
+            }
+
+            this.updateElementTransform(elementRef, calculatedAngleDeg, this.swingDragOptions.pickUpScaleFactor);
+
+            oldDrag.x = currentDrag.x;
+            oldDrag.y = currentDrag.y;
+        };
+
 
         elementRef.draggable({
 
-            start: (e: JQueryEventObject) => {
+            start: (e: JQueryEventObject, ui: any) => {
                 dragging = true;
 
                 if (this.swingDragOptions.showShadow) {
                     this.enableSwingDragShadow(elementRef);
                 }
 
-                calculatedAngle = Math.abs(this.swingDragOptions.rotationAngleDeg);
+                currentDrag.x = ui.position.left;
+                currentDrag.y = ui.position.top;
+
+                calculatedAngleDeg = Math.abs(this.swingDragOptions.rotationAngleDeg);
+
+                // Start the drag analyst handler.                
+                dragIntervalId = setInterval(updateCurrentDrag, this.updateCurrentDragVectorIntervalMS);
             },
 
             drag: (e: JQueryEventObject, ui: any) => {
-
-                direction = this.getDirection(ui.position.left, oldXPos);
-
-                if (direction === Directions.left && calculatedAngle > 0) {
-                    calculatedAngle = calculatedAngle * -1;
-                } else if (direction === Directions.right && calculatedAngle < 0) {
-                    calculatedAngle = calculatedAngle * -1;
-                }
-
-                this.updateElementTransform(elementRef, calculatedAngle, this.swingDragOptions.pickUpScaleFactor);
-
-                oldDirection = direction;
-                oldXPos = ui.position.left;
-                oldYPos = ui.position.top;
-
-                // Check if the element is not being dragged anymore 
-                // and could therefore being set to back to zero rotation.
-                setTimeout(() => {
-                    if (oldXPos === ui.position.left && oldYPos === ui.position.top) {
-                        let tempScaleFactor = 1;
-                        if (dragging) {
-                            tempScaleFactor = this.swingDragOptions.pickUpScaleFactor;
-                        }
-                        this.updateElementTransform(elementRef, 0, tempScaleFactor);
-                    }
-                }, 100);
+                currentDrag.x = ui.position.left;
+                currentDrag.y = ui.position.top;
             },
 
             stop: (e: JQueryEventObject) => {
+
+                // Stop the drag analyst handler.
+                if (dragIntervalId) {
+                    clearInterval(dragIntervalId);
+                }
+
                 this.disableSwingDragShadow(elementRef);
                 this.updateElementTransform(elementRef, 0, 1);
-                oldDirection = Directions.undefined;
+
                 dragging = false;
             }
         });
 
-    }
-
-
-    /**
-     * Calculates the dragging direction.
-     * 
-     * @param {number} actualX 
-     * @param {number} oldX 
-     * @returns {Directions} 
-     * 
-     * @memberOf SwingDragPlugIn
-     */
-    public getDirection(actualX: number, oldX: number): Directions {
-
-        let diffX = actualX - oldX;
-        if (actualX < oldX) {
-            return Directions.left;
-        } else if (actualX > oldX) {
-            return Directions.right;
-        } else {
-            return Directions.undefined;
-        }
     }
 
 

@@ -103,7 +103,7 @@ gulp.task("publish", ["publish:demoPage", "publish:sass", "publish:jquery", "pub
 gulp.task("publish:debug", function () {
     return gulp.src(dirs.src + 'swingDragPlugIn.ts')
         .pipe(webpack(require('./' + dirs.config + dirs.debug + 'webpack.config.js')))
-        .pipe(gulp.dest(dirs.dist));
+        .pipe(gulp.dest(dirs.dist + dirs.src));
 });
 
 /********************************************
