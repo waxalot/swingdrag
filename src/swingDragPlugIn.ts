@@ -165,17 +165,18 @@ export class SwingDragPlugIn {
         // the main implementation logic
         let dragIntervalId: any;
 
-        let dragging = false;
-
         let calculatedAngleDeg: number;
         let currentDrag = new Vector2D();
         let oldDrag = new Vector2D();
         let diffDrag = new Vector2D();
 
-
         // Used to update the drag effect.
         // Will be called from a separate interval.
         let updateCurrentDrag = () => {
+
+            let currentPos = elementRef.position();
+            currentDrag.x = currentPos.left;
+            currentDrag.y = currentPos.top;
 
             diffDrag.x = currentDrag.x - oldDrag.x;
             diffDrag.y = currentDrag.y - oldDrag.y;
@@ -196,44 +197,37 @@ export class SwingDragPlugIn {
             oldDrag.y = currentDrag.y;
         };
 
-
-        elementRef.draggable({
-
-            start: (e: JQueryEventObject, ui: any) => {
-                dragging = true;
-
-                if (this.swingDragOptions.showShadow) {
-                    this.enableSwingDragShadow(elementRef);
-                }
-
-                currentDrag.x = ui.position.left;
-                currentDrag.y = ui.position.top;
-
-                calculatedAngleDeg = Math.abs(this.swingDragOptions.rotationAngleDeg);
-
-                // Start the drag analyst handler.                
-                dragIntervalId = setInterval(updateCurrentDrag, this.updateCurrentDragVectorIntervalMS);
-            },
-
-            drag: (e: JQueryEventObject, ui: any) => {
-                currentDrag.x = ui.position.left;
-                currentDrag.y = ui.position.top;
-            },
-
-            stop: (e: JQueryEventObject) => {
-
-                // Stop the drag analyst handler.
-                if (dragIntervalId) {
-                    clearInterval(dragIntervalId);
-                }
-
-                this.disableSwingDragShadow(elementRef);
-                this.updateElementTransform(elementRef, 0, 1);
-
-                dragging = false;
+        // dragstart event handler
+        elementRef.on("dragstart", (event: JQueryEventObject) => {
+            if (this.swingDragOptions.showShadow) {
+                this.enableSwingDragShadow(elementRef);
             }
+
+            currentDrag.x = elementRef.position().left;
+            currentDrag.y = elementRef.position().top;
+
+            calculatedAngleDeg = Math.abs(this.swingDragOptions.rotationAngleDeg);
+
+            // Start the drag analyst handler.                
+            dragIntervalId = setInterval(updateCurrentDrag, this.updateCurrentDragVectorIntervalMS);
         });
 
+        // dragend event handler
+        elementRef.on("dragstop", (event: JQueryEventObject) => {
+            // Stop the drag analyst handler.
+            if (dragIntervalId) {
+                clearInterval(dragIntervalId);
+            }
+
+            this.disableSwingDragShadow(elementRef);
+            this.updateElementTransform(elementRef, 0, 1);
+        });
+
+        // Check if the target element is already draggable
+        // If not, then make it draggable
+        if (!elementRef.data('draggable')) {
+            elementRef.draggable();
+        }
     }
 
 

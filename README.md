@@ -8,10 +8,13 @@ For a full working demo click [here](http://codepen.io/waxalot/pen/xdOaRW)
 
 ## What`s new?
 
-### v.1.3.1
+### v1.4.0
+* swingdrag works together with other draggable plugins like [gridstack](https://www.npmjs.com/package/gridstack)
+
+### v1.3.1
 * The API documentation and the examples were updated.
 
-### v.1.3.0
+### v1.3.0
 * The swing effect is now depending on drag speed.
 
 ### v1.2.0
