@@ -34,7 +34,23 @@ export class SwingDragPlugIn {
             this.swingDragOptions = new SwingDragOptions();
         }
 
-        this.updateCurrentDragVectorIntervalMS = 1000 / 60; // 60fps
+        this.updateCurrentDragVectorIntervalMS = 1000 / 30; // 30fps
+    }
+
+
+    /**
+     * Maps a given value from a source range of numbers to a target range of numbers.
+     * 
+     * @private
+     * @param {number} value 
+     * @param {number} sourceMin 
+     * @param {number} sourceMax 
+     * @param {number} targetMin 
+     * @param {number} targetMax 
+     * @memberof SwingDragPlugIn
+     */
+    private mapValue(value: number, sourceMin: number, sourceMax: number, targetMin: number, targetMax: number) {
+        return (value - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin) + targetMin;
     }
 
 
@@ -60,6 +76,7 @@ export class SwingDragPlugIn {
 
         this.disableSwing(elementRef);
         this.disableSwingDragShadow(elementRef);
+        elementRef.removeClass("dragging");
 
         $(this.element).css({
             "transform": "",
@@ -181,15 +198,11 @@ export class SwingDragPlugIn {
             diffDrag.x = currentDrag.x - oldDrag.x;
             diffDrag.y = currentDrag.y - oldDrag.y;
 
-            let speed = diffDrag.x;
-            calculatedAngleDeg = speed;
+            let speedX = Math.abs(diffDrag.x) / this.updateCurrentDragVectorIntervalMS;
+            speedX = speedX * this.swingDragOptions.speedInfluenceFactor;
+            calculatedAngleDeg = this.mapValue(speedX, 0.0, 5.0, 0.0, this.swingDragOptions.maxRotationAngleDeg);
 
-            // Limit the rotation angle.
-            if (calculatedAngleDeg > this.swingDragOptions.rotationAngleDeg) {
-                calculatedAngleDeg = this.swingDragOptions.rotationAngleDeg;
-            } else if (calculatedAngleDeg < -this.swingDragOptions.rotationAngleDeg) {
-                calculatedAngleDeg = -this.swingDragOptions.rotationAngleDeg;
-            }
+            calculatedAngleDeg = calculatedAngleDeg * (diffDrag.x > 0 ? 1.0 : -1.0);
 
             this.updateElementTransform(elementRef, calculatedAngleDeg, this.swingDragOptions.pickUpScaleFactor);
 
@@ -199,6 +212,8 @@ export class SwingDragPlugIn {
 
         // dragstart event handler
         elementRef.on("dragstart", (event: JQueryEventObject) => {
+            elementRef.addClass("dragging");
+
             if (this.swingDragOptions.showShadow) {
                 this.enableSwingDragShadow(elementRef);
             }
@@ -206,7 +221,7 @@ export class SwingDragPlugIn {
             currentDrag.x = elementRef.position().left;
             currentDrag.y = elementRef.position().top;
 
-            calculatedAngleDeg = Math.abs(this.swingDragOptions.rotationAngleDeg);
+            calculatedAngleDeg = Math.abs(this.swingDragOptions.maxRotationAngleDeg);
 
             // Start the drag analyst handler.                
             dragIntervalId = setInterval(updateCurrentDrag, this.updateCurrentDragVectorIntervalMS);
@@ -214,6 +229,8 @@ export class SwingDragPlugIn {
 
         // dragend event handler
         elementRef.on("dragstop", (event: JQueryEventObject) => {
+            elementRef.removeClass("dragging");
+
             // Stop the drag analyst handler.
             if (dragIntervalId) {
                 clearInterval(dragIntervalId);
@@ -243,7 +260,11 @@ export class SwingDragPlugIn {
         this.swingDragOptions = new SwingDragOptions();
 
         if (this.options.rotationAngleDeg || this.options.rotationAngleDeg === 0) {
-            this.swingDragOptions.rotationAngleDeg = this.options.rotationAngleDeg;
+            this.swingDragOptions.maxRotationAngleDeg = this.options.rotationAngleDeg;
+        }
+
+        if (this.options.maxRotationAngleDeg || this.options.maxRotationAngleDeg === 0) {
+            this.swingDragOptions.maxRotationAngleDeg = this.options.maxRotationAngleDeg;
         }
 
         if (this.options.showShadow !== undefined) {
@@ -252,6 +273,10 @@ export class SwingDragPlugIn {
 
         if (this.options.pickUpScaleFactor || this.options.pickUpScaleFactor === 0) {
             this.swingDragOptions.pickUpScaleFactor = this.options.pickUpScaleFactor;
+        }
+
+        if (this.options.speedInfluenceFactor || this.options.speedInfluenceFactor === 0) {
+            this.swingDragOptions.speedInfluenceFactor = this.options.speedInfluenceFactor;
         }
     }
 
@@ -270,13 +295,19 @@ export class SwingDragPlugIn {
 
         switch (option) {
             case "rotationAngleDeg":
-                this.swingDragOptions.rotationAngleDeg = value;
+                this.swingDragOptions.maxRotationAngleDeg = value;
+                break;
+            case "maxRotationAngleDeg":
+                this.swingDragOptions.maxRotationAngleDeg = value;
                 break;
             case "showShadow":
                 this.swingDragOptions.showShadow = value;
                 break;
             case "pickUpScaleFactor":
                 this.swingDragOptions.pickUpScaleFactor = value;
+                break;
+            case "speedInfluenceFactor":
+                this.swingDragOptions.speedInfluenceFactor = value;
                 break;
         }
     }

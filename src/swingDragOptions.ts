@@ -6,6 +6,7 @@
  */
 export class SwingDragOptions {
 
+
     /**
      * The maximum possible angle of rotation in degrees.
      * Default: 20
@@ -13,7 +14,7 @@ export class SwingDragOptions {
      * @type {number}
      * @memberof SwingDragOptions
      */
-    public rotationAngleDeg: number;
+    public maxRotationAngleDeg: number;
 
 
     /**
@@ -37,14 +38,26 @@ export class SwingDragOptions {
 
 
     /**
+     * This factor controls the influence of the drag speed on the rotation angle.
+     * It is useful to control the rotation angle for different display resolutions (DPI).
+     * Default: 2.0
+     * 
+     * @type {number}
+     * @memberof SwingDragOptions
+     */
+    public speedInfluenceFactor: number;
+
+
+    /**
      * Creates an instance of SwingDragOptions.
      * 
      * @memberof SwingDragOptions
      */
     public constructor() {
-        this.rotationAngleDeg = 20;
+        this.maxRotationAngleDeg = 20;
         this.showShadow = true;
         this.pickUpScaleFactor = 1.1;
+        this.speedInfluenceFactor = 2.0;
     }
 
 }

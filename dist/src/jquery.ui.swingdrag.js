@@ -80,8 +80,22 @@
 	        if (!this.swingDragOptions) {
 	            this.swingDragOptions = new swingDragOptions_1.SwingDragOptions();
 	        }
-	        this.updateCurrentDragVectorIntervalMS = 1000 / 60; // 60fps
+	        this.updateCurrentDragVectorIntervalMS = 1000 / 30; // 30fps
 	    }
+	    /**
+	     * Maps a given value from a source range of numbers to a target range of numbers.
+	     *
+	     * @private
+	     * @param {number} value
+	     * @param {number} sourceMin
+	     * @param {number} sourceMax
+	     * @param {number} targetMin
+	     * @param {number} targetMax
+	     * @memberof SwingDragPlugIn
+	     */
+	    SwingDragPlugIn.prototype.mapValue = function (value, sourceMin, sourceMax, targetMin, targetMax) {
+	        return (value - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin) + targetMin;
+	    };
 	    /**
 	     * Destroys the plugin instance.
 	     *
@@ -100,6 +114,7 @@
 	        elementRef.draggable('destroy');
 	        this.disableSwing(elementRef);
 	        this.disableSwingDragShadow(elementRef);
+	        elementRef.removeClass("dragging");
 	        $(this.element).css({
 	            "transform": "",
 	        });
@@ -198,32 +213,29 @@
 	            currentDrag.y = currentPos.top;
 	            diffDrag.x = currentDrag.x - oldDrag.x;
 	            diffDrag.y = currentDrag.y - oldDrag.y;
-	            var speed = diffDrag.x;
-	            calculatedAngleDeg = speed;
-	            // Limit the rotation angle.
-	            if (calculatedAngleDeg > _this.swingDragOptions.rotationAngleDeg) {
-	                calculatedAngleDeg = _this.swingDragOptions.rotationAngleDeg;
-	            }
-	            else if (calculatedAngleDeg < -_this.swingDragOptions.rotationAngleDeg) {
-	                calculatedAngleDeg = -_this.swingDragOptions.rotationAngleDeg;
-	            }
+	            var speedX = Math.abs(diffDrag.x) / _this.updateCurrentDragVectorIntervalMS;
+	            speedX = speedX * _this.swingDragOptions.speedInfluenceFactor;
+	            calculatedAngleDeg = _this.mapValue(speedX, 0.0, 5.0, 0.0, _this.swingDragOptions.maxRotationAngleDeg);
+	            calculatedAngleDeg = calculatedAngleDeg * (diffDrag.x > 0 ? 1.0 : -1.0);
 	            _this.updateElementTransform(elementRef, calculatedAngleDeg, _this.swingDragOptions.pickUpScaleFactor);
 	            oldDrag.x = currentDrag.x;
 	            oldDrag.y = currentDrag.y;
 	        };
 	        // dragstart event handler
 	        elementRef.on("dragstart", function (event) {
+	            elementRef.addClass("dragging");
 	            if (_this.swingDragOptions.showShadow) {
 	                _this.enableSwingDragShadow(elementRef);
 	            }
 	            currentDrag.x = elementRef.position().left;
 	            currentDrag.y = elementRef.position().top;
-	            calculatedAngleDeg = Math.abs(_this.swingDragOptions.rotationAngleDeg);
+	            calculatedAngleDeg = Math.abs(_this.swingDragOptions.maxRotationAngleDeg);
 	            // Start the drag analyst handler.                
 	            dragIntervalId = setInterval(updateCurrentDrag, _this.updateCurrentDragVectorIntervalMS);
 	        });
 	        // dragend event handler
 	        elementRef.on("dragstop", function (event) {
+	            elementRef.removeClass("dragging");
 	            // Stop the drag analyst handler.
 	            if (dragIntervalId) {
 	                clearInterval(dragIntervalId);
@@ -248,13 +260,19 @@
 	    SwingDragPlugIn.prototype.initOptions = function () {
 	        this.swingDragOptions = new swingDragOptions_1.SwingDragOptions();
 	        if (this.options.rotationAngleDeg || this.options.rotationAngleDeg === 0) {
-	            this.swingDragOptions.rotationAngleDeg = this.options.rotationAngleDeg;
+	            this.swingDragOptions.maxRotationAngleDeg = this.options.rotationAngleDeg;
+	        }
+	        if (this.options.maxRotationAngleDeg || this.options.maxRotationAngleDeg === 0) {
+	            this.swingDragOptions.maxRotationAngleDeg = this.options.maxRotationAngleDeg;
 	        }
 	        if (this.options.showShadow !== undefined) {
 	            this.swingDragOptions.showShadow = this.options.showShadow;
 	        }
 	        if (this.options.pickUpScaleFactor || this.options.pickUpScaleFactor === 0) {
 	            this.swingDragOptions.pickUpScaleFactor = this.options.pickUpScaleFactor;
+	        }
+	        if (this.options.speedInfluenceFactor || this.options.speedInfluenceFactor === 0) {
+	            this.swingDragOptions.speedInfluenceFactor = this.options.speedInfluenceFactor;
 	        }
 	    };
 	    /**
@@ -270,13 +288,19 @@
 	        $.Widget.prototype._setOption.apply(this, arguments);
 	        switch (option) {
 	            case "rotationAngleDeg":
-	                this.swingDragOptions.rotationAngleDeg = value;
+	                this.swingDragOptions.maxRotationAngleDeg = value;
+	                break;
+	            case "maxRotationAngleDeg":
+	                this.swingDragOptions.maxRotationAngleDeg = value;
 	                break;
 	            case "showShadow":
 	                this.swingDragOptions.showShadow = value;
 	                break;
 	            case "pickUpScaleFactor":
 	                this.swingDragOptions.pickUpScaleFactor = value;
+	                break;
+	            case "speedInfluenceFactor":
+	                this.swingDragOptions.speedInfluenceFactor = value;
 	                break;
 	        }
 	    };
@@ -304,9 +328,10 @@
 	     * @memberof SwingDragOptions
 	     */
 	    function SwingDragOptions() {
-	        this.rotationAngleDeg = 20;
+	        this.maxRotationAngleDeg = 20;
 	        this.showShadow = true;
 	        this.pickUpScaleFactor = 1.1;
+	        this.speedInfluenceFactor = 2.0;
 	    }
 	    return SwingDragOptions;
 	}());

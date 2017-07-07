@@ -4,4 +4,8 @@
     &.shadow {
         box-shadow: 0 12px 11px #383838;
     }
+
+    &.dragging {
+        z-index: 1000;
+    }
 }

@@ -2,3 +2,5 @@
   transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); }
   .swingdrag.shadow {
     box-shadow: 0 12px 11px #383838; }
+  .swingdrag.dragging {
+    z-index: 1000; }
