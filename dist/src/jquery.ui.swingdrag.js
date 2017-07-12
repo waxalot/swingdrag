@@ -61,6 +61,7 @@
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var swingDragOptions_1 = __webpack_require__(2);
 	var vector2D_1 = __webpack_require__(3);
+	var mathUtils_1 = __webpack_require__(4);
 	/**
 	 * The main jQuery PlugIn implementation of swingdrag.
 	 *
@@ -82,20 +83,6 @@
 	        }
 	        this.updateCurrentDragVectorIntervalMS = 1000 / 30; // 30fps
 	    }
-	    /**
-	     * Maps a given value from a source range of numbers to a target range of numbers.
-	     *
-	     * @private
-	     * @param {number} value
-	     * @param {number} sourceMin
-	     * @param {number} sourceMax
-	     * @param {number} targetMin
-	     * @param {number} targetMax
-	     * @memberof SwingDragPlugIn
-	     */
-	    SwingDragPlugIn.prototype.mapValue = function (value, sourceMin, sourceMax, targetMin, targetMax) {
-	        return (value - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin) + targetMin;
-	    };
 	    /**
 	     * Destroys the plugin instance.
 	     *
@@ -215,7 +202,7 @@
 	            diffDrag.y = currentDrag.y - oldDrag.y;
 	            var speedX = Math.abs(diffDrag.x) / _this.updateCurrentDragVectorIntervalMS;
 	            speedX = speedX * _this.swingDragOptions.speedInfluenceFactor;
-	            calculatedAngleDeg = _this.mapValue(speedX, 0.0, 5.0, 0.0, _this.swingDragOptions.maxRotationAngleDeg);
+	            calculatedAngleDeg = mathUtils_1.MathUtils.mapInterval(speedX, 0.0, 5.0, 0.0, _this.swingDragOptions.maxRotationAngleDeg);
 	            calculatedAngleDeg = calculatedAngleDeg * (diffDrag.x > 0 ? 1.0 : -1.0);
 	            _this.updateElementTransform(elementRef, calculatedAngleDeg, _this.swingDragOptions.pickUpScaleFactor);
 	            oldDrag.x = currentDrag.x;
@@ -363,6 +350,54 @@
 	    return Vector2D;
 	}());
 	exports.Vector2D = Vector2D;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var MathUtils = (function () {
+	    function MathUtils() {
+	    }
+	    /**
+	     * Returns a number whose value was mapped from a source into a target range.
+	     *
+	     * Implemented function: f(value) = minTargetVal + ((maxTargetVal-minTargetVal) / (maxSourceVal - minSourceVal)) * (value - minSourceVal)
+	     *
+	     * @static
+	     * @param {number} value
+	     * @param {number} minSourceVal
+	     * @param {number} maxSourceVal
+	     * @param {number} minTargetVal
+	     * @param {number} maxTargetVal
+	     * @returns {number}
+	     *
+	     * @memberof MathUtils
+	     */
+	    MathUtils.mapInterval = function (value, minSourceVal, maxSourceVal, minTargetInterval, maxTargetInterval) {
+	        var clampedValue = MathUtils.clamp(value, minSourceVal, maxSourceVal);
+	        var result = minTargetInterval + ((maxTargetInterval - minTargetInterval) / (maxSourceVal - minSourceVal)) * (clampedValue - minSourceVal);
+	        return result;
+	    };
+	    /**
+	     * Returns a number whose value is limited to the given range.
+	     *
+	     * @static
+	     * @param {number} value
+	     * @param {number} min The lower boundary of the output range
+	     * @param {number} max The upper boundary of the output range
+	     * @returns {number} A number in the range [min, max]
+	     *
+	     * @memberof MathUtils
+	     */
+	    MathUtils.clamp = function (value, min, max) {
+	        return Math.min(Math.max(value, min), max);
+	    };
+	    return MathUtils;
+	}());
+	exports.MathUtils = MathUtils;
 
 
 /***/ })

@@ -3,6 +3,7 @@
 import * as jQuery from 'jquery';
 import { SwingDragOptions } from './swingDragOptions';
 import { Vector2D } from "./vector2D";
+import { MathUtils } from "./mathUtils";
 
 
 /**
@@ -35,22 +36,6 @@ export class SwingDragPlugIn {
         }
 
         this.updateCurrentDragVectorIntervalMS = 1000 / 30; // 30fps
-    }
-
-
-    /**
-     * Maps a given value from a source range of numbers to a target range of numbers.
-     * 
-     * @private
-     * @param {number} value 
-     * @param {number} sourceMin 
-     * @param {number} sourceMax 
-     * @param {number} targetMin 
-     * @param {number} targetMax 
-     * @memberof SwingDragPlugIn
-     */
-    private mapValue(value: number, sourceMin: number, sourceMax: number, targetMin: number, targetMax: number) {
-        return (value - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin) + targetMin;
     }
 
 
@@ -200,7 +185,7 @@ export class SwingDragPlugIn {
 
             let speedX = Math.abs(diffDrag.x) / this.updateCurrentDragVectorIntervalMS;
             speedX = speedX * this.swingDragOptions.speedInfluenceFactor;
-            calculatedAngleDeg = this.mapValue(speedX, 0.0, 5.0, 0.0, this.swingDragOptions.maxRotationAngleDeg);
+            calculatedAngleDeg = MathUtils.mapInterval(speedX, 0.0, 5.0, 0.0, this.swingDragOptions.maxRotationAngleDeg);
 
             calculatedAngleDeg = calculatedAngleDeg * (diffDrag.x > 0 ? 1.0 : -1.0);
 
