@@ -77,6 +77,9 @@ $("#container").swingdrag(options);
 ```
 
 ## Release notes
+### v1.5.1
+* Bug Fix: The maximum angle of rotation is now calculated correctly.
+
 ### v1.5.0
 * The `speedInfluenceFactor` option was added. This factor controls the influence of the drag speed on the rotation angle. This is useful to control the rotation angle for different display resolutions (DPI).
 * The `maxRotationAngleDeg` option was added. It controls the same behaviour as the `rotationAngleDeg` option and will replace it in future releases.
